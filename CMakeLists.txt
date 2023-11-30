@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.0)
+project(NetKit)
+
+set(CMAKE_CXX_STANDARD 23)
+include_directories(/opt/homebrew/Cellar/gcc/13.2.0/include/c++/13)
+include_directories(/opt/homebrew/Cellar/boost/1.83.0/include)
+include_directories(/opt/homebrew/Cellar/spd log/1.12.0/include/)
+# add_compile_options(-fmodules-ts -fmodule-file=/Users/dqy/CLionProjects/Tour/gcm.cache/opt/homebrew/Cellar/gcc/13.2.0/include/c++/13/iostream.gcm)
+# file(GLOB source_files "base/*.cc" "base/*.h")
+file(GLOB Boost_INCLUDE_DIRS "/opt/homebrew/Cellar/boost/1.83.0/include")
+file(GLOB Boost_LIBRARIES "/opt/homebrew/Cellar/boost/1.83.0/lib")
+
+# find_package(spdlog REQUIRED)
+
+find_package(Boost REQUIRED COMPONENTS log)
+
+# if(Boost_FOUND)
+# include_directories(${Boost_INCLUDE_DIRS})
+add_executable(NetKit
+        EventLoop.cpp
+        EventLoop.h
+        # test1.cpp
+        test2.cpp)
+target_link_libraries(NetKit PRIVATE ${Boost_LIBRARIES})
+# endif()
+
+
+
+
+#target_link_libraries(NetKit spdlog::spdlog)
