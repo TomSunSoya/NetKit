@@ -5,9 +5,15 @@
 #ifndef EVENTLOOP_H
 #define EVENTLOOP_H
 
-#include <boost/log/expressions.hpp>
+#include <boost/noncopyable.hpp>
 #include <atomic>
 #include <thread>
+#include <memory>
+#include <vector>
+
+#include "Channel.h"
+
+class Poller;
 
 class EventLoop : public boost::noncopyable {
 public:
@@ -28,12 +34,21 @@ public:
         return threadId_ == std::this_thread::get_id();
     }
 
+    void quit();
+    void updateChannel(Channel* channel) const;
+
     static EventLoop* getEventLoopOfCurrentThread();
 
 private:
     void abortNotInLoopThread() const;
+    using ChannelList = std::vector<Channel*>;
+
+    static const int kPollTimeMs;
 
     std::atomic_bool looping_;
+    std::atomic_bool quit_;
+    std::unique_ptr<Poller> poller_;
+    ChannelList activeChannels_;
     const std::thread::id threadId_;
 };
 

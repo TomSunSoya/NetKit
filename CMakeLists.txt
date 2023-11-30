@@ -20,7 +20,14 @@ add_executable(NetKit
         EventLoop.cpp
         EventLoop.h
         # test1.cpp
-        test2.cpp)
+        test2.cpp
+        Channel.cpp
+        Channel.h
+        Poller.cpp
+        Poller.h
+        Timestamp.h
+        Timestamp.cpp
+        test3.cpp)
 target_link_libraries(NetKit PRIVATE ${Boost_LIBRARIES})
 # endif()
 
