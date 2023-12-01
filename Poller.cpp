@@ -5,6 +5,7 @@
 #include "Poller.h"
 #include <poll.h>
 #include <iostream>
+#include <cassert>
 
 #include "Channel.h"
 
@@ -53,7 +54,7 @@ void Poller::updateChannel(Channel* channel)
     if (channel->index() < 0)
     {
         // a new one, add to pollfds_
-        assert(channels_.contains(channel->fd()));
+        assert(!channels_.contains(channel->fd()));
 
         struct pollfd pfd{};
         pfd.fd = channel->fd();

@@ -9,6 +9,7 @@
 #include <atomic>
 #include <thread>
 #include <memory>
+#include <iostream>
 #include <vector>
 
 #include "Channel.h"
@@ -21,7 +22,7 @@ public:
     ~EventLoop();
 
     void loop();
-    void assertInLoopThread() const
+    void assertInLoopThread() 
     {
         if (!isInLoopThread())
         {
@@ -35,7 +36,8 @@ public:
     }
 
     void quit();
-    void updateChannel(Channel* channel) const;
+    void updateChannel(Channel* channel);
+    // void setPoller(Poller* poll);
 
     static EventLoop* getEventLoopOfCurrentThread();
 
@@ -51,6 +53,14 @@ private:
     ChannelList activeChannels_;
     const std::thread::id threadId_;
 };
+
+// template <>
+// struct std::formatter<EventLoop*> : std::formatter<std::string> {
+//     auto format(EventLoop* loop, format_context& ctx) {
+//         std::string representation = "EventLoop@" + std::to_string(reinterpret_cast<std::uintptr_t>(loop));
+//         return std::formatter<std::string>::format(representation, ctx);
+//     }
+// };
 
 
 

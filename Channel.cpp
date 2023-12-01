@@ -20,7 +20,7 @@ Channel::Channel(EventLoop* loop, const int fd) : loop_(loop), fd_(fd), events_(
 
 void Channel::update()
 {
-    loop_->updateChannel();
+    loop_->updateChannel(this);
 }
 
 void Channel::handleEvent() const

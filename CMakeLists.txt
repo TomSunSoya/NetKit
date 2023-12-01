@@ -2,17 +2,16 @@ cmake_minimum_required(VERSION 3.0)
 project(NetKit)
 
 set(CMAKE_CXX_STANDARD 23)
-include_directories(/opt/homebrew/Cellar/gcc/13.2.0/include/c++/13)
-include_directories(/opt/homebrew/Cellar/boost/1.83.0/include)
-include_directories(/opt/homebrew/Cellar/spd log/1.12.0/include/)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include_directories(/usr/include)
+# include_directories(/opt/homebrew/Cellar/boost/1.83.0/include)
+# include_directories(/opt/homebrew/Cellar/spd log/1.12.0/include/)
 # add_compile_options(-fmodules-ts -fmodule-file=/Users/dqy/CLionProjects/Tour/gcm.cache/opt/homebrew/Cellar/gcc/13.2.0/include/c++/13/iostream.gcm)
 # file(GLOB source_files "base/*.cc" "base/*.h")
-file(GLOB Boost_INCLUDE_DIRS "/opt/homebrew/Cellar/boost/1.83.0/include")
-file(GLOB Boost_LIBRARIES "/opt/homebrew/Cellar/boost/1.83.0/lib")
-
+# file(GLOB Boost_INCLUDE_DIRS "/opt/homebrew/Cellar/boost/1.83.0/include")
+# file(GLOB Boost_LIBRARIES "/opt/homebrew/Cellar/boost/1.83.0/lib")
+add_compile_options(-g)
 # find_package(spdlog REQUIRED)
-
-find_package(Boost REQUIRED COMPONENTS log)
 
 # if(Boost_FOUND)
 # include_directories(${Boost_INCLUDE_DIRS})
@@ -20,7 +19,7 @@ add_executable(NetKit
         EventLoop.cpp
         EventLoop.h
         # test1.cpp
-        test2.cpp
+        # test2.cpp
         Channel.cpp
         Channel.h
         Poller.cpp
@@ -28,7 +27,7 @@ add_executable(NetKit
         Timestamp.h
         Timestamp.cpp
         test3.cpp)
-target_link_libraries(NetKit PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(NetKit PRIVATE /usr/lib)
 # endif()
 
 

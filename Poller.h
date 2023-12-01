@@ -7,12 +7,13 @@
 
 #include <unordered_map>
 #include <vector>
+#include <poll.h>
+#include <iostream>
 
 #include "EventLoop.h"
 #include "Timestamp.h"
 
 class Channel;
-struct pollfd;
 
 class Poller : public boost::noncopyable {
 // IO Multiplexing with poll(2)
@@ -31,7 +32,7 @@ public:
     // Must be called in the loop thread
     void updateChannel(Channel* channel);
 
-    void assertInLoopThread() const
+    void assertInLoopThread()
     {
         ownerLoop_->assertInLoopThread();
     }

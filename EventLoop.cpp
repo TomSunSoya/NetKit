@@ -5,7 +5,6 @@
 #include "EventLoop.h"
 
 #include <cassert>
-#include <format>
 #include <iostream>
 
 #include "Poller.h"
@@ -14,17 +13,17 @@ const int EventLoop::kPollTimeMs = 5 * 1000;
 
 thread_local EventLoop* t_loopInThisThread = nullptr;
 
-EventLoop::EventLoop() : looping_(false), threadId_(std::this_thread::get_id())
+EventLoop::EventLoop() : looping_(false), threadId_(std::this_thread::get_id()), poller_(new Poller(this))
 {
     std::clog << "EventLoop created " << this << " in thread " << threadId_ << std::endl;
 
     if (t_loopInThisThread)
     {
         std::cerr << "Another EventLoop " << t_loopInThisThread << " exists in this thread " << threadId_ << std::endl;
-        std::cerr << std::format("Another EventLoop {} exists in this thread {}.\n", t_loopInThisThread, threadId_);
+        // std::cerr << "Another EventLoop " << t_loopInThisThread <<  exists in this thread {}.\n", t_loopInThisThread, threadId_);
         pthread_exit(nullptr);
     }
-    else
+    else 
         t_loopInThisThread = this;
 }
 
@@ -61,7 +60,7 @@ void EventLoop::loop()
 
 void EventLoop::abortNotInLoopThread() const
 {
-    std::cerr << "EventLoop::abortNotInLoopThread - EventLoop " << this
+    std::cerr << "ERROR: EventLoop::abortNotInLoopThread - EventLoop " << this
             << " was created in threadId_ = " << threadId_
             << ", current thread id = " <<  std::this_thread::get_id() << '\n';
 }
@@ -72,12 +71,14 @@ void EventLoop::quit()
     // wakeup()
 }
 
-void EventLoop::updateChannel(Channel* channel) const
+void EventLoop::updateChannel(Channel* channel)
 {
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
     poller_->updateChannel(channel);
 }
 
-
+// void EventLoop::setPoller(Poller *p) {
+//     poller_.reset(p);
+// }
 
