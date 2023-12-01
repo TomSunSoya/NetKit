@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <vector>
 #include <poll.h>
-#include <iostream>
 
 #include "EventLoop.h"
 #include "Timestamp.h"
@@ -32,7 +31,7 @@ public:
     // Must be called in the loop thread
     void updateChannel(Channel* channel);
 
-    void assertInLoopThread()
+    void assertInLoopThread() const
     {
         ownerLoop_->assertInLoopThread();
     }

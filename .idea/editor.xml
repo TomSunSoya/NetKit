@@ -4,5 +4,7 @@
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003Acstddef_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FDeveloper_003FCommandLineTools_003FSDKs_003FMacOSX_002Esdk_003Fusr_003Finclude_003Fc_002B_002B_003Fv1_003Fcstddef/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
     <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003A_005F_005Fconfig_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FDeveloper_003FCommandLineTools_003FSDKs_003FMacOSX_002Esdk_003Fusr_003Finclude_003Fc_002B_002B_003Fv1_003F_005F_005Fconfig/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
+    <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=8BC9CEB8_002D8B4A_002D11D0_002D8D11_002D00A0C91BC942_002Fd_003Atest_002Ff_003Atest3_002Ecpp/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
+    <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=8BC9CEB8_002D8B4A_002D11D0_002D8D11_002D00A0C91BC942_002Fd_003Atest_002Ff_003Atest3_002Ecpp/@EntryIndexRemoved" />
   </component>
 </project>

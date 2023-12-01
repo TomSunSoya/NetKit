@@ -5,9 +5,9 @@
 #include <iostream>
 #include <cstring>
 
-#include "EventLoop.h"
-#include "Channel.h"
-#include "Poller.h"
+#include "../EventLoop.h"
+#include "../Channel.h"
+#include "../Poller.h"
 
 EventLoop* g_loop;
 

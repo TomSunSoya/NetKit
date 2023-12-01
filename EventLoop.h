@@ -11,8 +11,12 @@
 #include <memory>
 #include <iostream>
 #include <vector>
+#include <mutex>
 
+#include "Callbacks.h"
 #include "Channel.h"
+#include "TimerId.h"
+#include "Timestamp.h"
 
 class Poller;
 
@@ -22,7 +26,7 @@ public:
     ~EventLoop();
 
     void loop();
-    void assertInLoopThread() 
+    void assertInLoopThread() const
     {
         if (!isInLoopThread())
         {
@@ -36,32 +40,40 @@ public:
     }
 
     void quit();
-    void updateChannel(Channel* channel);
+    void updateChannel(Channel* channel) const;
+    void runInLoop(const Functor& cb);
+
     // void setPoller(Poller* poll);
+
+    TimerId runAt(const Timestamp& time, const TimerCallback& cb) const;
+    TimerId runAfter(double delay, const TimerCallback& cb) const;
+    TimerId runEvery(double interval, const TimerCallback& cb) const;
 
     static EventLoop* getEventLoopOfCurrentThread();
 
 private:
     void abortNotInLoopThread() const;
+    void handleRead() const;
+    void wakeup() const;
+    void doPendingFunctors();
+    void queueInLoop(const Functor& cb);
+
     using ChannelList = std::vector<Channel*>;
 
     static const int kPollTimeMs;
 
     std::atomic_bool looping_;
     std::atomic_bool quit_;
+    std::atomic_bool callingPendingFunctors;
     std::unique_ptr<Poller> poller_;
     ChannelList activeChannels_;
     const std::thread::id threadId_;
+    Timestamp pollReturnTime;
+    std::unique_ptr<TimerQueue> timerQueue_{};
+    int wakeupFd_{};
+    std::unique_ptr<Channel> wakeupChannel_;
+    std::mutex mutex_;
+    std::vector<Functor> pendingFunctors_;      // @GuardedBy mutex_
 };
-
-// template <>
-// struct std::formatter<EventLoop*> : std::formatter<std::string> {
-//     auto format(EventLoop* loop, format_context& ctx) {
-//         std::string representation = "EventLoop@" + std::to_string(reinterpret_cast<std::uintptr_t>(loop));
-//         return std::formatter<std::string>::format(representation, ctx);
-//     }
-// };
-
-
 
 #endif //EVENTLOOP_H
