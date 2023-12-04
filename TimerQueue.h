@@ -11,6 +11,7 @@
 #include <set>
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <unordered_set>
 
 #include "EventLoop.h"
 #include "TimerId.h"
@@ -33,21 +34,27 @@ public:
 private:
     using Entry = std::pair<Timestamp, std::unique_ptr<Timer>>;
     using TimerList = std::set<Entry>;
+    using ActiveTimer = std::pair<std::unique_ptr<Timer>, int64_t>;
+    using ActiveTimerSet = std::unordered_set<ActiveTimer>;
 
     // called when timerfd alarms
     void handleRead();
+    void addTimerInLoop(std::unique_ptr<Timer>&& timer);
 
     // move out all expired timers
     std::vector<Entry> getExpired(Timestamp now);
     void reset(const std::vector<Entry>& expired, Timestamp now);
 
-    bool insert(Timer *timer);
+    bool insert(std::unique_ptr<Timer>&& timer);
 
     EventLoop* loop_;
     const int timerfd_;
     Channel timerfdChannel_;
     // Timer list sorted by expiration
     TimerList timers_;
+    std::atomic_bool callingExpiredTimes_;
+    ActiveTimerSet activeTimers_;
+    ActiveTimerSet cancelingTimers_;
 };
 
 
