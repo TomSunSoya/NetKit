@@ -33,7 +33,9 @@ add_executable(NetKit
         TimerQueue.cpp
         TimerQueue.h
         Callbacks.h
-        test/test4.cpp)
+        test/test4.cpp
+        EventLoopThread.cpp
+        EventLoopThread.h)
 # target_link_libraries(NetKit PRIVATE /usr/lib)
 # target_link_libraries(NetKit PRIVATE /opt/homebrew/Cellar/boost/1.83.0/lib)
 # endif()
