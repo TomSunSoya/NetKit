@@ -45,7 +45,7 @@ public:
     {
         revents_ = revt;
     }
-    bool isNoneEvent() const
+    [[nodiscard]] bool isNoneEvent() const
     {
         return events_ == kNoneEvent;
     }
