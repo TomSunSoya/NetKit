@@ -6,6 +6,7 @@
 #define NETKIT_EVENTLOOPTHREAD_H
 
 #include <boost/noncopyable.hpp>
+#include <future>
 #include "EventLoop.h"
 
 class EventLoopThread : public boost::noncopyable {
@@ -22,6 +23,8 @@ private:
     std::thread thread_;
     std::mutex mutex_;
     std::condition_variable cond_;
+    std::future<void> startFuture_;
+    std::promise<void> startSignal_;
     ThreadInitCallback callback_;
 };
 
