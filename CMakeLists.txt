@@ -46,7 +46,8 @@ add_executable(NetKit
         InetAddress.h
         Logger.h
         Socket.cpp
-        Socket.h)
+        Socket.h
+        test/test5.cpp)
 # target_link_libraries(NetKit PRIVATE /usr/lib)
 # target_link_libraries(NetKit PRIVATE /opt/homebrew/Cellar/boost/1.83.0/lib)
 # endif()
