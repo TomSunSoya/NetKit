@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <boost/noncopyable.hpp>
+
 class EventLoop;
 
 class Channel : public boost::noncopyable {

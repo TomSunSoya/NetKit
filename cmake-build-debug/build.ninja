@@ -112,6 +112,34 @@ build CMakeFiles/NetKit.dir/EventLoopThread.cpp.o: CXX_COMPILER__NetKit_unscanne
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
+build CMakeFiles/NetKit.dir/Acceptor.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Acceptor.cpp || cmake_object_order_depends_target_NetKit
+  DEP_FILE = CMakeFiles/NetKit.dir/Acceptor.cpp.o.d
+  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  OBJECT_DIR = CMakeFiles/NetKit.dir
+  OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
+
+build CMakeFiles/NetKit.dir/SocketsOps.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/SocketsOps.cpp || cmake_object_order_depends_target_NetKit
+  DEP_FILE = CMakeFiles/NetKit.dir/SocketsOps.cpp.o.d
+  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  OBJECT_DIR = CMakeFiles/NetKit.dir
+  OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
+
+build CMakeFiles/NetKit.dir/InetAddress.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/InetAddress.cpp || cmake_object_order_depends_target_NetKit
+  DEP_FILE = CMakeFiles/NetKit.dir/InetAddress.cpp.o.d
+  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  OBJECT_DIR = CMakeFiles/NetKit.dir
+  OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
+
+build CMakeFiles/NetKit.dir/Socket.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Socket.cpp || cmake_object_order_depends_target_NetKit
+  DEP_FILE = CMakeFiles/NetKit.dir/Socket.cpp.o.d
+  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  OBJECT_DIR = CMakeFiles/NetKit.dir
+  OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target NetKit
@@ -120,7 +148,7 @@ build CMakeFiles/NetKit.dir/EventLoopThread.cpp.o: CXX_COMPILER__NetKit_unscanne
 #############################################
 # Link the executable NetKit
 
-build NetKit: CXX_EXECUTABLE_LINKER__NetKit_Debug CMakeFiles/NetKit.dir/EventLoop.cpp.o CMakeFiles/NetKit.dir/Channel.cpp.o CMakeFiles/NetKit.dir/Poller.cpp.o CMakeFiles/NetKit.dir/Timestamp.cpp.o CMakeFiles/NetKit.dir/test/test3.cpp.o CMakeFiles/NetKit.dir/Timer.cpp.o CMakeFiles/NetKit.dir/TimerQueue.cpp.o CMakeFiles/NetKit.dir/test/test4.cpp.o CMakeFiles/NetKit.dir/EventLoopThread.cpp.o
+build NetKit: CXX_EXECUTABLE_LINKER__NetKit_Debug CMakeFiles/NetKit.dir/EventLoop.cpp.o CMakeFiles/NetKit.dir/Channel.cpp.o CMakeFiles/NetKit.dir/Poller.cpp.o CMakeFiles/NetKit.dir/Timestamp.cpp.o CMakeFiles/NetKit.dir/test/test3.cpp.o CMakeFiles/NetKit.dir/Timer.cpp.o CMakeFiles/NetKit.dir/TimerQueue.cpp.o CMakeFiles/NetKit.dir/test/test4.cpp.o CMakeFiles/NetKit.dir/EventLoopThread.cpp.o CMakeFiles/NetKit.dir/Acceptor.cpp.o CMakeFiles/NetKit.dir/SocketsOps.cpp.o CMakeFiles/NetKit.dir/InetAddress.cpp.o CMakeFiles/NetKit.dir/Socket.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
   OBJECT_DIR = CMakeFiles/NetKit.dir
   POST_BUILD = :

@@ -35,7 +35,18 @@ add_executable(NetKit
         Callbacks.h
         test/test4.cpp
         EventLoopThread.cpp
-        EventLoopThread.h)
+        EventLoopThread.h
+        Acceptor.cpp
+        Acceptor.h
+        SocketsOps.cpp
+        SocketsOps.h
+        copyable.h
+        Endian.h
+        InetAddress.cpp
+        InetAddress.h
+        Logger.h
+        Socket.cpp
+        Socket.h)
 # target_link_libraries(NetKit PRIVATE /usr/lib)
 # target_link_libraries(NetKit PRIVATE /opt/homebrew/Cellar/boost/1.83.0/lib)
 # endif()
