@@ -11,11 +11,30 @@
 #include <set>
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <atomic>
 #include <unordered_set>
+#include <utility>
 
-#include "EventLoop.h"
-#include "TimerId.h"
 #include "Callbacks.h"
+#include "Channel.h"
+
+
+class EventLoop;
+class Timer; // 假设 Timer 类已经定义
+class TimerId;
+
+struct TimerHash {
+    size_t operator()(const std::pair<Timer*, long int>& timer) const {
+        return std::hash<Timer*>()(timer.first) ^ std::hash<long int>()(timer.second);
+    }
+};
+
+struct TimerEqual {
+    bool operator()(const std::pair<Timer*, long int>& a, const std::pair<Timer*, long int>& b) const {
+        return a.first == b.first && a.second == b.second;
+    }
+};
+
 
 class TimerQueue : public boost::noncopyable{
 public:
@@ -28,24 +47,24 @@ public:
      * Must be thread safe. Usually be called from other thread.
      */
     TimerId addTimer(const TimerCallback& cb, Timestamp when, double interval);
+    void addTimerInLoop(std::unique_ptr<Timer> timer);
 
     // void cancel(TimerId timer_id);
 
 private:
     using Entry = std::pair<Timestamp, std::unique_ptr<Timer>>;
     using TimerList = std::set<Entry>;
-    using ActiveTimer = std::pair<std::unique_ptr<Timer>, int64_t>;
-    using ActiveTimerSet = std::unordered_set<ActiveTimer>;
+    using ActiveTimer = std::pair<Timer*, int64_t>;
+    using ActiveTimerSet = std::unordered_set<ActiveTimer, TimerHash, TimerEqual>;
 
     // called when timerfd alarms
     void handleRead();
-    void addTimerInLoop(std::unique_ptr<Timer>&& timer);
 
     // move out all expired timers
     std::vector<Entry> getExpired(Timestamp now);
     void reset(const std::vector<Entry>& expired, Timestamp now);
 
-    bool insert(std::unique_ptr<Timer>&& timer);
+    bool insert(Timer* timer);
 
     EventLoop* loop_;
     const int timerfd_;

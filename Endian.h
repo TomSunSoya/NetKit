@@ -44,7 +44,7 @@ inline uint16_t hostToNetwork16(uint16_t host16) {
 }
 
 inline uint64_t networkToHost64(uint64_t net64) {
-    return ntohll(net64);
+    return ntohLL(net64);
 }
 
 inline uint32_t networkToHost32(uint32_t net32) {

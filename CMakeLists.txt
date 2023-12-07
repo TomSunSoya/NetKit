@@ -3,8 +3,8 @@ project(NetKit)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# include_directories(/usr/include)
-include_directories(/opt/homebrew/Cellar/boost/1.83.0/include)
+include_directories(/usr/include)
+# include_directories(/opt/homebrew/Cellar/boost/1.83.0/include)
 # include_directories(/opt/homebrew/Cellar/spd log/1.12.0/include/)
 # add_compile_options(-fmodules-ts -fmodule-file=/Users/dqy/CLionProjects/Tour/gcm.cache/opt/homebrew/Cellar/gcc/13.2.0/include/c++/13/iostream.gcm)
 # file(GLOB source_files "base/*.cc" "base/*.h")
@@ -26,14 +26,14 @@ add_executable(NetKit
         Poller.h
         Timestamp.h
         Timestamp.cpp
-        test/test3.cpp
+		#test/test3.cpp
         Timer.cpp
         Timer.h
         TimerId.h
         TimerQueue.cpp
         TimerQueue.h
         Callbacks.h
-        test/test4.cpp
+		#test/test4.cpp
         EventLoopThread.cpp
         EventLoopThread.h
         Acceptor.cpp
@@ -48,7 +48,7 @@ add_executable(NetKit
         Socket.cpp
         Socket.h
         test/test5.cpp)
-# target_link_libraries(NetKit PRIVATE /usr/lib)
+target_link_libraries(NetKit PRIVATE /usr/lib)
 # target_link_libraries(NetKit PRIVATE /opt/homebrew/Cellar/boost/1.83.0/lib)
 # endif()
 

@@ -160,29 +160,6 @@ int connect(int sockfd, const struct sockaddr* addr)
     return ::connect(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in6)));
 }
 
-ssize_t read(int sockfd, void *buf, size_t count)
-{
-    return ::read(sockfd, buf, count);
-}
-
-ssize_t readv(int sockfd, const struct iovec *iov, int iovcnt)
-{
-    return ::readv(sockfd, iov, iovcnt);
-}
-
-ssize_t write(int sockfd, const void *buf, size_t count)
-{
-    return ::write(sockfd, buf, count);
-}
-
-void close(int sockfd)
-{
-    if (::close(sockfd) < 0)
-    {
-        LOG_ERROR << "close";
-    }
-}
-
 void shutdownWrite(int sockfd)
 {
     if (::shutdown(sockfd, SHUT_WR) < 0)

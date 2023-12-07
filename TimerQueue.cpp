@@ -7,12 +7,17 @@
 #include <cassert>
 #include <cstring>
 #include <sys/timerfd.h>
+#include <memory>
+
+#include "Logger.h"
+#include "TimerId.h"
+#include "EventLoop.h"
 
 int createTimerfd() {
     int timerfd = ::timerfd_create(CLOCK_MONOTONIC,
                                    TFD_NONBLOCK | TFD_CLOEXEC);
     if (timerfd < 0) {
-        LOG_SYSFATAL << "Failed in timerfd_create";
+        LOG_FATAL << "Failed in timerfd_create";
     }
     return timerfd;
 }
@@ -32,7 +37,7 @@ struct timespec howMuchTimeFromNow(Timestamp when) {
     if (microseconds < 100) {
         microseconds = 100;
     }
-    struct timespec ts;
+    struct timespec ts{};
     ts.tv_sec = static_cast<time_t>(
             microseconds / Timestamp::kMicroSecondsPerSecond);
     ts.tv_nsec = static_cast<long>(
@@ -73,30 +78,41 @@ TimerQueue::~TimerQueue() {
 
 std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now) {
     std::vector<Entry> expired;
-    const auto sentry = std::make_pair(now, nullptr);
+    Entry sentry(now, nullptr);
 
-    const auto it = timers_.lower_bound(sentry);
+    auto it = timers_.lower_bound(sentry);
     assert(it == timers_.end() || now < it->first);
-    std::copy(timers_.begin(), it, std::back_inserter(expired));
-    timers_.erase(timers_.begin(), it);
+
+    // 从 set 中移除所有过期的 timer，并添加到 expired 向量中
+    auto it0 = timers_.begin();
+    while (it0 != it && it0->first < now) {
+        // 由于 set 中的元素是常量，不能直接移动 unique_ptr
+        // 需要先复制 key，然后删除原元素，再构造新元素
+        expired.emplace_back(it0->first, std::move(const_cast<std::unique_ptr<Timer>&>(it0->second)));
+        // 注意：const_cast 只应在这种特定情况下使用，并且需要非常小心
+        it0 = timers_.erase(it0); // erase 会返回下一个有效迭代器
+    }
 
     return expired;
 }
+
+
+
 
 TimerId TimerQueue::addTimer(const TimerCallback &cb, Timestamp when, double interval) {
     auto timer = std::make_unique<Timer>(cb, when, interval);
     Timer *timerPtr = timer.get(); // 保留裸指针用于返回 TimerId
 
     // 使用 lambda 捕获移动的 unique_ptr
-    loop_->runInLoop([this, t = std::move(timer)]() mutable { addTimerInLoop(std::move(t)); });
+    loop_->runInLoop([this, &timer]() mutable { addTimerInLoop(std::move(timer)); });
 
     return {timerPtr, timerPtr->sequence()};
 }
 
-void TimerQueue::addTimerInLoop(std::unique_ptr<Timer> &&timer) {
+void TimerQueue::addTimerInLoop(std::unique_ptr<Timer> timer) {
     loop_->assertInLoopThread();
 
-    if (const bool earliestChanged = insert(std::move(timer)); earliestChanged)
+    if (const bool earliestChanged = insert(timer.get()); earliestChanged)
         resetTimerfd(timerfd_, timer->expiration());
 }
 
@@ -114,18 +130,28 @@ void TimerQueue::handleRead() {
     reset(expired, now);
 }
 
-void TimerQueue::reset(const std::vector<Entry> &expired, Timestamp now) {
-    Timestamp nextExpired;
-    for (const auto& it : expired) {
-        auto seq = it.second->sequence();
-        ActiveTimer timer(std::move(it.second), seq);
-        if (timer.first->repeat()) {
-            // todo
+void TimerQueue::reset(const std::vector<Entry>& expired, Timestamp now) {
+    Timestamp nextExpire;
+
+    for (const Entry& it : expired) {
+        ActiveTimer timer(it.second.get(), it.second->sequence());
+        if (it.second->repeat() && cancelingTimers_.find(timer) == cancelingTimers_.end()) {
+            it.second->restart(now);
+            // 由于unique_ptr无法复制，需要使用std::move来转移所有权
+            insert(it.second.get());
         }
+        // 不再需要 delete，unique_ptr 会自动管理内存
+    }
+
+    if (!timers_.empty()) {
+        nextExpire = timers_.begin()->second->expiration();
+    }
+
+    if (nextExpire.valid()) {
+        resetTimerfd(timerfd_, nextExpire);
     }
 }
-
-bool TimerQueue::insert(std::unique_ptr<Timer> &&timer) {
+bool TimerQueue::insert(Timer* timer) {
     loop_->assertInLoopThread();
     assert(timers_.size() == activeTimers_.size());
     bool earliestChanged = false;
@@ -134,7 +160,8 @@ bool TimerQueue::insert(std::unique_ptr<Timer> &&timer) {
     if (it == timers_.end() || when < it->first)
         earliestChanged = true;
     {
-        auto result = activeTimers_.insert(ActiveTimer(timer, timer->sequence()));
+        auto seq = timer->sequence();
+        auto result = activeTimers_.insert(ActiveTimer(timer, seq));
         assert(result.second);
         (void)result;
     }

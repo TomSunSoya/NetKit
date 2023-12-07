@@ -14,11 +14,13 @@
 #include <mutex>
 
 #include "Callbacks.h"
-#include "Channel.h"
 #include "TimerId.h"
 #include "Timestamp.h"
 
+
+class Channel;
 class Poller;
+class TimerQueue;
 
 class EventLoop : public boost::noncopyable {
 public:

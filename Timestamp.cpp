@@ -1,60 +1,171 @@
-// Use of this source code is governed by a BSD-style license
-// that can be found in the License file.
 //
-// Author: Shuo Chen (chenshuo at chenshuo dot com)
+// Created by qiuyudai on 2023/12/1.
+//
 
-#include "Timestamp.h"
+#include "TimerQueue.h"
 
-#include <sys/time.h>
-#include <cstdio>
+#include <cassert>
+#include <cstring>
+#include <sys/timerfd.h>
+#include <memory>
 
-#ifndef STDC_FORMAT_MACROS
-#define STDC_FORMAT_MACROS
-#endif
+#include "Logger.h"
+#include "TimerId.h"
+#include "EventLoop.h"
 
-#include <cinttypes>
-#include <string>
-
-static_assert(sizeof(Timestamp) == sizeof(int64_t),
-              "Timestamp should be same size as int64_t");
-
-std::string Timestamp::toString() const
-{
-    auto *buf = new char[32];
-    const int64_t seconds = microSecondsSinceEpoch_ / kMicroSecondsPerSecond;
-    const int64_t microseconds = microSecondsSinceEpoch_ % kMicroSecondsPerSecond;
-    snprintf(buf, sizeof(buf), "%" PRId64 ".%06" PRId64 "", seconds, microseconds);
-    return buf;
+int createTimerfd() {
+    int timerfd = ::timerfd_create(CLOCK_MONOTONIC,
+                                   TFD_NONBLOCK | TFD_CLOEXEC);
+    if (timerfd < 0) {
+        LOG_FATAL << "Failed in timerfd_create";
+    }
+    return timerfd;
 }
 
-std::string Timestamp::toFormattedString(const bool showMicroseconds) const
-{
-    const auto buf = new char[64];
-    const auto seconds = static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
-    struct tm tm_time{};
-    gmtime_r(&seconds, &tm_time);
-
-    if (showMicroseconds)
-    {
-        const int microseconds = static_cast<int>(microSecondsSinceEpoch_ % kMicroSecondsPerSecond);
-        snprintf(buf, sizeof(buf), "%4d%02d%02d %02d:%02d:%02d.%06d",
-                 tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
-                 tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec,
-                 microseconds);
+void readTimerfd(int timerfd, Timestamp now) {
+    uint64_t howmany;
+    ssize_t n = ::read(timerfd, &howmany, sizeof howmany);
+    std::cout << "TimerQueue::handleRead() " << howmany << " at " << now.toString() << '\n';
+    if (n != sizeof howmany) {
+        std::cerr << "ERROR: TimerQueue::handleRead() reads " << n << " bytes instead of 8\n";
     }
-    else
-    {
-        snprintf(buf, sizeof(buf), "%4d%02d%02d %02d:%02d:%02d",
-                 tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
-                 tm_time.tm_hour, tm_time.tm_min, tm_time.tm_sec);
-    }
-    return buf;
 }
 
-Timestamp Timestamp::now()
-{
-    struct timeval tv{};
-    gettimeofday(&tv, nullptr);
-    const int64_t seconds = tv.tv_sec;
-    return Timestamp(seconds * kMicroSecondsPerSecond + tv.tv_usec);
+struct timespec howMuchTimeFromNow(Timestamp when) {
+    int64_t microseconds = when.microSecondsSinceEpoch()
+                           - Timestamp::now().microSecondsSinceEpoch();
+    if (microseconds < 100) {
+        microseconds = 100;
+    }
+    struct timespec ts{};
+    ts.tv_sec = static_cast<time_t>(
+            microseconds / Timestamp::kMicroSecondsPerSecond);
+    ts.tv_nsec = static_cast<long>(
+            (microseconds % Timestamp::kMicroSecondsPerSecond) * 1000);
+    return ts;
+}
+
+void resetTimerfd(int timerfd, Timestamp expiration) {
+    // wake up loop by timerfd_settime()
+    struct itimerspec newValue;
+    struct itimerspec oldValue;
+    bzero(&newValue, sizeof newValue);
+    bzero(&oldValue, sizeof oldValue);
+    newValue.it_value = howMuchTimeFromNow(expiration);
+    int ret = ::timerfd_settime(timerfd, 0, &newValue, &oldValue);
+    if (ret) {
+        std::cerr << "ERROR: timerfd_settime()\n";
+    }
+}
+
+TimerQueue::TimerQueue(EventLoop *loop) :
+        loop_(loop),
+        timerfd_(createTimerfd()),
+        timerfdChannel_(loop_, timerfd_),
+        timers_(),
+        callingExpiredTimes_(false) {
+    timerfdChannel_.setReadCallback([this] {
+        handleRead();
+    });
+    timerfdChannel_.enableReading();
+}
+
+TimerQueue::~TimerQueue() {
+    // timerfdChannel_.disableAll();
+    // timerfdChannel_.remove();
+    ::close(timerfd_);
+}
+
+std::vector<TimerQueue::Entry> TimerQueue::getExpired(Timestamp now) {
+    std::vector<Entry> expired;
+    Entry sentry(now, nullptr);
+
+    auto it = timers_.lower_bound(sentry);
+    assert(it == timers_.end() || now < it->first);
+
+    // 从 set 中移除所有过期的 timer，并添加到 expired 向量中
+    auto it0 = timers_.begin();
+    while (it0 != it && it0->first < now) {
+        // 由于 set 中的元素是常量，不能直接移动 unique_ptr
+        // 需要先复制 key，然后删除原元素，再构造新元素
+        expired.push_back(Entry(it0->first, std::move(const_cast<std::unique_ptr<Timer>&>(it0->second))));
+        // 注意：const_cast 只应在这种特定情况下使用，并且需要非常小心
+        it0 = timers_.erase(it0); // erase 会返回下一个有效迭代器
+    }
+
+    return expired;
+}
+
+
+
+
+TimerId TimerQueue::addTimer(const TimerCallback &cb, Timestamp when, double interval) {
+    auto timer = std::make_unique<Timer>(cb, when, interval);
+    Timer *timerPtr = timer.get(); // 保留裸指针用于返回 TimerId
+
+    // 使用 lambda 捕获移动的 unique_ptr
+    loop_->runInLoop([this, &timer]() mutable { addTimerInLoop(std::move(timer)); });
+
+    return {timerPtr, timerPtr->sequence()};
+}
+
+void TimerQueue::addTimerInLoop(std::unique_ptr<Timer> timer) {
+    loop_->assertInLoopThread();
+
+    if (const bool earliestChanged = insert(timer.get()); earliestChanged)
+        resetTimerfd(timerfd_, timer->expiration());
+}
+
+void TimerQueue::handleRead() {
+    loop_->assertInLoopThread();
+    Timestamp now(Timestamp::now());
+    readTimerfd(timerfd_, now);
+    auto expired = getExpired(now);
+
+    callingExpiredTimes_ = true;
+    for (const auto& entry : expired)
+        entry.second->run();
+    callingExpiredTimes_ = false;
+
+    reset(expired, now);
+}
+
+void TimerQueue::reset(const std::vector<Entry>& expired, Timestamp now) {
+    Timestamp nextExpire;
+
+    for (const Entry& it : expired) {
+        ActiveTimer timer(it.second.get(), it.second->sequence());
+        if (it.second->repeat() && cancelingTimers_.find(timer) == cancelingTimers_.end()) {
+            it.second->restart(now);
+            // 由于unique_ptr无法复制，需要使用std::move来转移所有权
+            insert(it.second.get());
+        }
+        // 不再需要 delete，unique_ptr 会自动管理内存
+    }
+
+    if (!timers_.empty()) {
+        nextExpire = timers_.begin()->second->expiration();
+    }
+
+    if (nextExpire.valid()) {
+        resetTimerfd(timerfd_, nextExpire);
+    }
+}
+bool TimerQueue::insert(Timer* timer) {
+    loop_->assertInLoopThread();
+    assert(timers_.size() == activeTimers_.size());
+    bool earliestChanged = false;
+    Timestamp when = timer->expiration();
+    auto it = timers_.begin();
+    if (it == timers_.end() || when < it->first)
+        earliestChanged = true;
+    {
+        auto seq = timer->sequence();
+        auto result = activeTimers_.insert(ActiveTimer(timer, seq));
+        assert(result.second);
+        (void)result;
+    }
+
+    assert(timers_.size() == activeTimers_.size());
+    return earliestChanged;
 }
