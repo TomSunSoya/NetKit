@@ -4,8 +4,8 @@
 
 #include "Socket.h"
 #include "InetAddress.h"
-#include "Logger.h"
-#include "SocketsOps.h"
+#include "utils/Logger.h"
+#include "utils/SocketsOps.h"
 
 #include <cstdio>
 #include <cstring>

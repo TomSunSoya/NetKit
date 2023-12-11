@@ -36,6 +36,8 @@ public:
         ownerLoop_->assertInLoopThread();
     }
 
+    void removeChannel(Channel* channel);
+
 private:
     void fillActiveChannels(int numEvents, ChannelList* activeChannels) const;
 

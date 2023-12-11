@@ -52,13 +52,14 @@ public:
     TimerId runEvery(double interval, const TimerCallback& cb) const;
 
     static EventLoop* getEventLoopOfCurrentThread();
+    void queueInLoop(const Functor& cb);
 
 private:
     void abortNotInLoopThread() const;
     void handleRead() const;
     void wakeup() const;
     void doPendingFunctors();
-    void queueInLoop(const Functor& cb);
+
 
     using ChannelList = std::vector<Channel*>;
 

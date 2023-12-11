@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <boost/noncopyable.hpp>
+#include <atomic>
 
 class EventLoop;
 
@@ -15,6 +16,7 @@ public:
     using EventCallback = std::function<void()>;
 
     Channel(EventLoop *loop, int fd);
+    ~Channel();
 
     [[nodiscard]] EventLoop *ownerLoop() const
     {
@@ -32,6 +34,9 @@ public:
     void set_error_callback(const EventCallback& error_callback)
     {
         errorCallback_ = error_callback;
+    }
+    void set_close_callback(const EventCallback& close_callback) {
+        closeCallback_ = close_callback;
     }
 
     [[nodiscard]] int fd() const
@@ -94,10 +99,12 @@ private:
     int events_;
     int revents_;
     int index_; // used by poller
+    std::atomic_bool eventHandling_;
 
     EventCallback readCallback_;
     EventCallback writeCallback_;
     EventCallback errorCallback_;
+    EventCallback closeCallback_;
 };
 
 

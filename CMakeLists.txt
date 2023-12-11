@@ -4,7 +4,7 @@ project(NetKit)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(/usr/include)
-# include_directories(/opt/homebrew/Cellar/boost/1.83.0/include)
+include_directories(/opt/homebrew/Cellar/boost/1.83.0/include)
 # include_directories(/opt/homebrew/Cellar/spd log/1.12.0/include/)
 # add_compile_options(-fmodules-ts -fmodule-file=/Users/dqy/CLionProjects/Tour/gcm.cache/opt/homebrew/Cellar/gcc/13.2.0/include/c++/13/iostream.gcm)
 # file(GLOB source_files "base/*.cc" "base/*.h")
@@ -38,17 +38,22 @@ add_executable(NetKit
         EventLoopThread.h
         Acceptor.cpp
         Acceptor.h
-        SocketsOps.cpp
-        SocketsOps.h
+        utils/SocketsOps.cpp
+        utils/SocketsOps.h
         copyable.h
         Endian.h
         InetAddress.cpp
         InetAddress.h
-        Logger.h
+        utils/Logger.h
         Socket.cpp
         Socket.h
-        test/test5.cpp)
-target_link_libraries(NetKit PRIVATE /usr/lib)
+        test/test5.cpp
+        TcpServer.cpp
+        TcpServer.h
+        TcpConnection.cpp
+        TcpConnection.h
+        test/test6.cpp)
+# target_link_libraries(NetKit PRIVATE /usr/lib)
 # target_link_libraries(NetKit PRIVATE /opt/homebrew/Cellar/boost/1.83.0/lib)
 # endif()
 

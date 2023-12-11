@@ -3,8 +3,8 @@
 //
 
 #include "SocketsOps.h"
-#include "Endian.h"
-#include "InetAddress.h"
+#include "../Endian.h"
+#include "../InetAddress.h"
 #include "Logger.h"
 
 
@@ -19,8 +19,7 @@
 #include <cassert>
 #include <iostream>
 
-namespace
-{
+namespace {
 
     typedef struct sockaddr SA;
 
@@ -46,33 +45,27 @@ namespace
 
 }  // namespace
 
-const struct sockaddr* sockaddr_cast(const struct sockaddr_in6* addr)
-{
-    return static_cast<const struct sockaddr*>(static_cast<const void*>(addr));
+const struct sockaddr *sockaddr_cast(const struct sockaddr_in6 *addr) {
+    return static_cast<const struct sockaddr *>(static_cast<const void *>(addr));
 }
 
-struct sockaddr* sockaddr_cast(struct sockaddr_in6* addr)
-{
-    return static_cast<struct sockaddr*>(static_cast<void*>(addr));
+struct sockaddr *sockaddr_cast(struct sockaddr_in6 *addr) {
+    return static_cast<struct sockaddr *>(static_cast<void *>(addr));
 }
 
-const struct sockaddr* sockaddr_cast(const struct sockaddr_in* addr)
-{
-    return static_cast<const struct sockaddr*>(static_cast<const void*>(addr));
+const struct sockaddr *sockaddr_cast(const struct sockaddr_in *addr) {
+    return static_cast<const struct sockaddr *>(static_cast<const void *>(addr));
 }
 
-const struct sockaddr_in* sockaddr_in_cast(const struct sockaddr* addr)
-{
-    return static_cast<const struct sockaddr_in*>(static_cast<const void*>(addr));
+const struct sockaddr_in *sockaddr_in_cast(const struct sockaddr *addr) {
+    return static_cast<const struct sockaddr_in *>(static_cast<const void *>(addr));
 }
 
-const struct sockaddr_in6* sockaddr_in6_cast(const struct sockaddr* addr)
-{
-    return static_cast<const struct sockaddr_in6*>(static_cast<const void*>(addr));
+const struct sockaddr_in6 *sockaddr_in6_cast(const struct sockaddr *addr) {
+    return static_cast<const struct sockaddr_in6 *>(static_cast<const void *>(addr));
 }
 
-int createNonblockingOrDie(sa_family_t family)
-{
+int createNonblockingOrDie(sa_family_t family) {
 #if VALGRIND
     int sockfd = ::socket(family, SOCK_STREAM, IPPROTO_TCP);
   if (sockfd < 0)
@@ -83,34 +76,28 @@ int createNonblockingOrDie(sa_family_t family)
   setNonBlockAndCloseOnExec(sockfd);
 #else
     int sockfd = ::socket(family, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
-    if (sockfd < 0)
-    {
+    if (sockfd < 0) {
         LOG_FATAL << "createNonblockingOrDie\n";
     }
 #endif
     return sockfd;
 }
 
-void bindOrDie(int sockfd, const struct sockaddr* addr)
-{
+void bindOrDie(int sockfd, const struct sockaddr *addr) {
     int ret = ::bind(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in6)));
-    if (ret < 0)
-    {
+    if (ret < 0) {
         LOG_ERROR << "bindOrDie\n";
     }
 }
 
-void listenOrDie(int sockfd)
-{
+void listenOrDie(int sockfd) {
     int ret = ::listen(sockfd, SOMAXCONN);
-    if (ret < 0)
-    {
+    if (ret < 0) {
         LOG_ERROR << "listenOrDie\n";
     }
 }
 
-int accept(int sockfd, struct sockaddr_in6* addr)
-{
+int accept(int sockfd, struct sockaddr_in6 *addr) {
     auto addrlen = static_cast<socklen_t>(sizeof *addr);
 #if VALGRIND || defined (NO_ACCEPT4)
     int connfd = ::accept(sockfd, sockaddr_cast(addr), &addrlen);
@@ -119,12 +106,10 @@ int accept(int sockfd, struct sockaddr_in6* addr)
     int connfd = ::accept4(sockfd, sockaddr_cast(addr),
                            &addrlen, SOCK_NONBLOCK | SOCK_CLOEXEC);
 #endif
-    if (connfd < 0)
-    {
+    if (connfd < 0) {
         int savedErrno = errno;
         LOG_ERROR << "Socket::accept";
-        switch (savedErrno)
-        {
+        switch (savedErrno) {
             case EAGAIN:
             case ECONNABORTED:
             case EINTR:
@@ -155,137 +140,110 @@ int accept(int sockfd, struct sockaddr_in6* addr)
     return connfd;
 }
 
-int connect(int sockfd, const struct sockaddr* addr)
-{
+int connect(int sockfd, const struct sockaddr *addr) {
     return ::connect(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in6)));
 }
 
-void shutdownWrite(int sockfd)
-{
-    if (::shutdown(sockfd, SHUT_WR) < 0)
-    {
+void shutdownWrite(int sockfd) {
+    if (::shutdown(sockfd, SHUT_WR) < 0) {
         LOG_ERROR << "shutdownWrite";
     }
 }
 
-void toIpPort(char* buf, size_t size,
-                       const struct sockaddr* addr)
-{
-    if (addr->sa_family == AF_INET6)
-    {
+void toIpPort(char *buf, size_t size,
+              const struct sockaddr *addr) {
+    if (addr->sa_family == AF_INET6) {
         buf[0] = '[';
-        toIp(buf+1, size-1, addr);
+        toIp(buf + 1, size - 1, addr);
         size_t end = ::strlen(buf);
-        const struct sockaddr_in6* addr6 = sockaddr_in6_cast(addr);
+        const struct sockaddr_in6 *addr6 = sockaddr_in6_cast(addr);
         uint16_t port = networkToHost16(addr6->sin6_port);
         assert(size > end);
-        snprintf(buf+end, size-end, "]:%u", port);
+        snprintf(buf + end, size - end, "]:%u", port);
         return;
     }
     toIp(buf, size, addr);
     size_t end = ::strlen(buf);
-    const struct sockaddr_in* addr4 = sockaddr_in_cast(addr);
+    const struct sockaddr_in *addr4 = sockaddr_in_cast(addr);
     uint16_t port = networkToHost16(addr4->sin_port);
     assert(size > end);
-    snprintf(buf+end, size-end, ":%u", port);
+    snprintf(buf + end, size - end, ":%u", port);
 }
 
-void toIp(char* buf, size_t size,
-                   const struct sockaddr* addr)
-{
-    if (addr->sa_family == AF_INET)
-    {
+void toIp(char *buf, size_t size,
+          const struct sockaddr *addr) {
+    if (addr->sa_family == AF_INET) {
         assert(size >= INET_ADDRSTRLEN);
-        const struct sockaddr_in* addr4 = sockaddr_in_cast(addr);
+        const struct sockaddr_in *addr4 = sockaddr_in_cast(addr);
         ::inet_ntop(AF_INET, &addr4->sin_addr, buf, static_cast<socklen_t>(size));
-    }
-    else if (addr->sa_family == AF_INET6)
-    {
+    } else if (addr->sa_family == AF_INET6) {
         assert(size >= INET6_ADDRSTRLEN);
-        const struct sockaddr_in6* addr6 = sockaddr_in6_cast(addr);
+        const struct sockaddr_in6 *addr6 = sockaddr_in6_cast(addr);
         ::inet_ntop(AF_INET6, &addr6->sin6_addr, buf, static_cast<socklen_t>(size));
     }
 }
 
-void fromIpPort(const char* ip, uint16_t port,
-                         struct sockaddr_in* addr)
-{
+void fromIpPort(const char *ip, uint16_t port,
+                struct sockaddr_in *addr) {
     addr->sin_family = AF_INET;
     addr->sin_port = hostToNetwork16(port);
-    if (::inet_pton(AF_INET, ip, &addr->sin_addr) <= 0)
-    {
+    if (::inet_pton(AF_INET, ip, &addr->sin_addr) <= 0) {
         LOG_ERROR << "fromIpPort\n";
     }
 }
 
-void fromIpPort(const char* ip, uint16_t port,
-                         struct sockaddr_in6* addr)
-{
+void fromIpPort(const char *ip, uint16_t port,
+                struct sockaddr_in6 *addr) {
     addr->sin6_family = AF_INET6;
     addr->sin6_port = hostToNetwork16(port);
-    if (::inet_pton(AF_INET6, ip, &addr->sin6_addr) <= 0)
-    {
+    if (::inet_pton(AF_INET6, ip, &addr->sin6_addr) <= 0) {
         LOG_ERROR << "fromIpPort\n";
     }
 }
 
-int getSocketError(int sockfd)
-{
+int getSocketError(int sockfd) {
     int optval;
     auto optlen = static_cast<socklen_t>(sizeof optval);
 
-    if (::getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0)
-    {
+    if (::getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0) {
         return errno;
-    }
-    else
-    {
+    } else {
         return optval;
     }
 }
 
-struct sockaddr_in6 getLocalAddr(int sockfd)
-{
+struct sockaddr_in6 getLocalAddr(int sockfd) {
     struct sockaddr_in6 localaddr{};
     bzero(&localaddr, sizeof localaddr);
     auto addrlen = static_cast<socklen_t>(sizeof localaddr);
-    if (::getsockname(sockfd, sockaddr_cast(&localaddr), &addrlen) < 0)
-    {
+    if (::getsockname(sockfd, sockaddr_cast(&localaddr), &addrlen) < 0) {
         LOG_ERROR << "getLocalAddr";
     }
     return localaddr;
 }
 
-struct sockaddr_in6 getPeerAddr(int sockfd)
-{
+struct sockaddr_in6 getPeerAddr(int sockfd) {
     struct sockaddr_in6 peeraddr{};
     bzero(&peeraddr, sizeof peeraddr);
     auto addrlen = static_cast<socklen_t>(sizeof peeraddr);
-    if (::getpeername(sockfd, sockaddr_cast(&peeraddr), &addrlen) < 0)
-    {
+    if (::getpeername(sockfd, sockaddr_cast(&peeraddr), &addrlen) < 0) {
         LOG_ERROR << "getPeerAddr";
     }
     return peeraddr;
 }
 
-bool isSelfConnect(int sockfd)
-{
+bool isSelfConnect(int sockfd) {
     struct sockaddr_in6 localaddr = getLocalAddr(sockfd);
     struct sockaddr_in6 peeraddr = getPeerAddr(sockfd);
-    if (localaddr.sin6_family == AF_INET)
-    {
-        const struct sockaddr_in* laddr4 = reinterpret_cast<struct sockaddr_in*>(&localaddr);
-        const struct sockaddr_in* raddr4 = reinterpret_cast<struct sockaddr_in*>(&peeraddr);
+    if (localaddr.sin6_family == AF_INET) {
+        const struct sockaddr_in *laddr4 = reinterpret_cast<struct sockaddr_in *>(&localaddr);
+        const struct sockaddr_in *raddr4 = reinterpret_cast<struct sockaddr_in *>(&peeraddr);
         return laddr4->sin_port == raddr4->sin_port
                && laddr4->sin_addr.s_addr == raddr4->sin_addr.s_addr;
-    }
-    else if (localaddr.sin6_family == AF_INET6)
-    {
+    } else if (localaddr.sin6_family == AF_INET6) {
         return localaddr.sin6_port == peeraddr.sin6_port
                && memcmp(&localaddr.sin6_addr, &peeraddr.sin6_addr, sizeof localaddr.sin6_addr) == 0;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }

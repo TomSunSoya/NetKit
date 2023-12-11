@@ -3,9 +3,9 @@
 //
 
 #include "InetAddress.h"
-#include "SocketsOps.h"
+#include "utils/SocketsOps.h"
 #include "Endian.h"
-#include "Logger.h"
+#include "utils/Logger.h"
 
 #include <cstring>
 #include <cassert>

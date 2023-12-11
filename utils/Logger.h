@@ -12,12 +12,14 @@
 #include <chrono>
 #include <iomanip>
 #include <thread>
+#include <cstring>
 
 enum class LogLevel {
     TRACE,
     INFO,
     ERROR,
-    FATAL
+    FATAL,
+    WARN
 };
 
 class Logger {
@@ -50,6 +52,7 @@ private:
             case LogLevel::INFO: return "INFO";
             case LogLevel::ERROR: return "ERROR";
             case LogLevel::FATAL: return "FATAL";
+            case LogLevel::WARN: return "WARN";
             default: return "UNKNOWN";
         }
     }
@@ -77,6 +80,14 @@ std::mutex Logger::mutex_;
 #define LOG_INFO Logger(LogLevel::INFO)
 #define LOG_ERROR Logger(LogLevel::ERROR)
 #define LOG_FATAL Logger(LogLevel::FATAL)
+#define LOG_WARN Logger(LogLevel::WARN)
+
+thread_local char t_errnobuf[512];
+
+const char* strerror_tl(int savedErrno)
+{
+    return strerror_r(savedErrno, t_errnobuf, sizeof t_errnobuf);
+}
 
 
 #endif //NETKIT_LOGGER_H
