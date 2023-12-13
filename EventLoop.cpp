@@ -5,6 +5,7 @@
 
 #include "Poller.h"
 #include "TimerQueue.h"
+#include "utils/Logger.h"
 
 const int EventLoop::kPollTimeMs = 5 * 1000;
 
@@ -36,7 +37,7 @@ EventLoop* EventLoop::getEventLoopOfCurrentThread()
 }
 
 // TODO：首先等5秒退出
-void EventLoop::loop()
+void EventLoop::loop(Timestamp time)
 {
     assert(!looping_);
     assertInLoopThread();
@@ -48,7 +49,7 @@ void EventLoop::loop()
         activeChannels_.clear();
         poller_->poll(kPollTimeMs, &activeChannels_);
         for (const auto& channel : activeChannels_)
-            channel->handleEvent();
+            channel->handleEvent(time);
         doPendingFunctors();
     }
 
@@ -58,7 +59,7 @@ void EventLoop::loop()
 
 void EventLoop::abortNotInLoopThread() const
 {
-    std::cerr << "ERROR: EventLoop::abortNotInLoopThread - EventLoop " << this
+    LOG_ERROR << "EventLoop::abortNotInLoopThread - EventLoop " << this
             << " was created in threadId_ = " << threadId_
             << ", current thread id = " <<  std::this_thread::get_id() << '\n';
 }

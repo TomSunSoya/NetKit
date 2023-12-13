@@ -13,6 +13,7 @@
 #include "Channel.h"
 #include "InetAddress.h"
 #include "Callbacks.h"
+#include "Buffer.h"
 
 class EventLoop;
 
@@ -37,24 +38,33 @@ private:
         kDisconnected,
     };
 
+    TcpConnectionPtr getShared() {
+        auto t = shared_from_this();
+        auto T = t.get();
+        t.reset();
+        return TcpConnectionPtr(T);
+    }
+
     void setState(StateE s) {
         state_ = s;
     }
-    void handleRead();
+    void handleRead(Timestamp receiveTime);
     void handleWrite();
     void handleClose();
     void handleError();
+
 
     EventLoop *loop_;
     std::string name_;
     std::atomic<StateE> state_;
     std::unique_ptr<Socket> socket_;
-    std::unique_ptr<Channel> channel_;
+    boost::shared_ptr<Channel> channel_;
     InetAddress localAddr;
     InetAddress peerAddr;
     ConnectionCallback connectionCallback_;
     MessageCallback  messageCallback_;
     CloseCallback closeCallback_;
+    Buffer inputBuffer_;
 };
 
 

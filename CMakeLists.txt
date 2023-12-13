@@ -52,7 +52,9 @@ add_executable(NetKit
         TcpServer.h
         TcpConnection.cpp
         TcpConnection.h
-        test/test6.cpp)
+        test/test6.cpp
+        Buffer.cpp
+        Buffer.h)
 # target_link_libraries(NetKit PRIVATE /usr/lib)
 # target_link_libraries(NetKit PRIVATE /opt/homebrew/Cellar/boost/1.83.0/lib)
 # endif()

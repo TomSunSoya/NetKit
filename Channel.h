@@ -9,11 +9,14 @@
 #include <boost/noncopyable.hpp>
 #include <atomic>
 
+#include "Timestamp.h"
+
 class EventLoop;
 
 class Channel : public boost::noncopyable {
 public:
     using EventCallback = std::function<void()>;
+    using ReadEventCallback = std::function<void(Timestamp)>;
 
     Channel(EventLoop *loop, int fd);
     ~Channel();
@@ -22,8 +25,8 @@ public:
     {
         return loop_;
     }
-    void handleEvent() const;
-    void setReadCallback(const EventCallback& read_callback)
+    void handleEvent(Timestamp reveiveTime) const;
+    void setReadCallback(const ReadEventCallback & read_callback)
     {
         readCallback_ = read_callback;
     }
@@ -101,7 +104,7 @@ private:
     int index_; // used by poller
     std::atomic_bool eventHandling_;
 
-    EventCallback readCallback_;
+    ReadEventCallback readCallback_;
     EventCallback writeCallback_;
     EventCallback errorCallback_;
     EventCallback closeCallback_;

@@ -7,19 +7,18 @@
 #include "EventLoop.h"
 #include "utils/SocketsOps.h"
 
-void TcpConnection::handleRead() {
-    char buf[65536];
-    auto n = ::read(channel_->fd(), buf, sizeof buf);
-    if (n > 0) {
-        auto t = shared_from_this();
-        auto T = t.get();
-        t.reset();
-        TcpConnectionPtr temp(T);
-        messageCallback_(temp, buf, n);
-    } else if (n == 0)
+void TcpConnection::handleRead(Timestamp receiveTime) {
+    int saveErrno = 0;
+    ssize_t n = inputBuffer_.readFd(channel_->fd(), &saveErrno);
+    if (n > 0)
+        messageCallback_(getShared(), &inputBuffer_, receiveTime);
+    else if (n == 0)
         handleClose();
-    else
+    else {
+        errno = saveErrno;
+        LOG_ERROR << "TcpConnection::handleRead";
         handleError();
+    }
 }
 
 const std::string &TcpConnection::getName() const {
@@ -35,10 +34,7 @@ void TcpConnection::handleClose() {
     LOG_TRACE << "TcpConnection::handleClose state = " << state_;
     assert(state_ == kConnected);
     channel_->disableAll();
-    auto t = shared_from_this();
-    auto T = t.get();
-    t.reset();
-    TcpConnectionPtr temp(T);
+    auto temp = getShared();
     closeCallback_(temp);
 }
 

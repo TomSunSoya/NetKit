@@ -27,7 +27,7 @@ public:
     EventLoop();
     ~EventLoop();
 
-    void loop();
+    void loop(Timestamp time = Timestamp::now());
     void assertInLoopThread() const
     {
         if (!isInLoopThread())
