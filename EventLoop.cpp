@@ -150,3 +150,10 @@ void EventLoop::handleRead() const
     }
 }
 
+void EventLoop::removeChannel(Channel *channel) {
+    auto newEnd = std::remove(activeChannels_.begin(), activeChannels_.end(), channel);
+
+    // 实际删除等于 channel 的元素
+    activeChannels_.erase(newEnd, activeChannels_.end());
+}
+

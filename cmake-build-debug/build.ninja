@@ -51,113 +51,113 @@ build cmake_object_order_depends_target_NetKit: phony || CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/EventLoop.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/EventLoop.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/EventLoop.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/Channel.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Channel.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/Channel.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/Poller.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Poller.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/Poller.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/Timestamp.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Timestamp.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/Timestamp.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/Timer.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Timer.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/Timer.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/TimerQueue.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/TimerQueue.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/TimerQueue.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/EventLoopThread.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/EventLoopThread.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/EventLoopThread.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/Acceptor.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Acceptor.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/Acceptor.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/utils/SocketsOps.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/utils/SocketsOps.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/utils/SocketsOps.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir/utils
 
 build CMakeFiles/NetKit.dir/InetAddress.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/InetAddress.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/InetAddress.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/Socket.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Socket.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/Socket.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/test/test5.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/test/test5.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/test/test5.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir/test
 
 build CMakeFiles/NetKit.dir/TcpServer.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/TcpServer.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/TcpServer.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/TcpConnection.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/TcpConnection.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/TcpConnection.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
 build CMakeFiles/NetKit.dir/test/test6.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/test/test6.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/test/test6.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir/test
 
 build CMakeFiles/NetKit.dir/Buffer.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /Users/dqy/CLionProjects/NetKit/Buffer.cpp || cmake_object_order_depends_target_NetKit
   DEP_FILE = CMakeFiles/NetKit.dir/Buffer.cpp.o.d
-  FLAGS = -g -std=gnu++23 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -fdiagnostics-color=always -g
-  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include
+  FLAGS = -g -std=gnu++23 -arch arm64 -fdiagnostics-color=always -g
+  INCLUDES = -I/opt/homebrew/Cellar/boost/1.83.0/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX14.2.sdk/usr/include
   OBJECT_DIR = CMakeFiles/NetKit.dir
   OBJECT_FILE_DIR = CMakeFiles/NetKit.dir
 
@@ -170,7 +170,7 @@ build CMakeFiles/NetKit.dir/Buffer.cpp.o: CXX_COMPILER__NetKit_unscanned_Debug /
 # Link the executable NetKit
 
 build NetKit: CXX_EXECUTABLE_LINKER__NetKit_Debug CMakeFiles/NetKit.dir/EventLoop.cpp.o CMakeFiles/NetKit.dir/Channel.cpp.o CMakeFiles/NetKit.dir/Poller.cpp.o CMakeFiles/NetKit.dir/Timestamp.cpp.o CMakeFiles/NetKit.dir/Timer.cpp.o CMakeFiles/NetKit.dir/TimerQueue.cpp.o CMakeFiles/NetKit.dir/EventLoopThread.cpp.o CMakeFiles/NetKit.dir/Acceptor.cpp.o CMakeFiles/NetKit.dir/utils/SocketsOps.cpp.o CMakeFiles/NetKit.dir/InetAddress.cpp.o CMakeFiles/NetKit.dir/Socket.cpp.o CMakeFiles/NetKit.dir/test/test5.cpp.o CMakeFiles/NetKit.dir/TcpServer.cpp.o CMakeFiles/NetKit.dir/TcpConnection.cpp.o CMakeFiles/NetKit.dir/test/test6.cpp.o CMakeFiles/NetKit.dir/Buffer.cpp.o
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk
+  FLAGS = -g -arch arm64
   OBJECT_DIR = CMakeFiles/NetKit.dir
   POST_BUILD = :
   PRE_LINK = :

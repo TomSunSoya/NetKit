@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <thread>
 #include <cstring>
+#include <ctime>
 
 enum class LogLevel {
     TRACE,

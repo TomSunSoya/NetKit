@@ -53,6 +53,7 @@ public:
 
     static EventLoop* getEventLoopOfCurrentThread();
     void queueInLoop(const Functor& cb);
+    void removeChannel(Channel* channel);
 
 private:
     void abortNotInLoopThread() const;

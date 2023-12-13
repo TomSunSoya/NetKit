@@ -17,7 +17,7 @@
 
 class EventLoop;
 
-class TcpConnection : public boost::noncopyable, public boost::enable_shared_from_this<TcpConnection> {
+class TcpConnection : public boost::noncopyable, public std::enable_shared_from_this<TcpConnection> {
 public:
     const std::string &getName() const;
 
@@ -31,19 +31,16 @@ public:
 
     void setMessageCallback(const MessageCallback &messageCallback);
 
+    void send(const std::string& message);
+    void shutdown();
+
 private:
     enum StateE {
-        kConnection,
+        kConnecting,
         kConnected,
         kDisconnected,
+        kDisconnecting
     };
-
-    TcpConnectionPtr getShared() {
-        auto t = shared_from_this();
-        auto T = t.get();
-        t.reset();
-        return TcpConnectionPtr(T);
-    }
 
     void setState(StateE s) {
         state_ = s;
@@ -52,19 +49,21 @@ private:
     void handleWrite();
     void handleClose();
     void handleError();
-
+    void sendInLoop(const std::string& message);
+    void shutdownInLoop();
 
     EventLoop *loop_;
     std::string name_;
     std::atomic<StateE> state_;
     std::unique_ptr<Socket> socket_;
-    boost::shared_ptr<Channel> channel_;
+    std::shared_ptr<Channel> channel_;
     InetAddress localAddr;
     InetAddress peerAddr;
     ConnectionCallback connectionCallback_;
     MessageCallback  messageCallback_;
     CloseCallback closeCallback_;
     Buffer inputBuffer_;
+    Buffer outputBuffer_;
 };
 
 
