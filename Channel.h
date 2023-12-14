@@ -30,15 +30,15 @@ public:
     {
         readCallback_ = read_callback;
     }
-    void set_write_callback(const EventCallback& write_callback)
+    void setWriteCallback(const EventCallback& write_callback)
     {
         writeCallback_ = write_callback;
     }
-    void set_error_callback(const EventCallback& error_callback)
+    void setErrorCallback(const EventCallback& error_callback)
     {
         errorCallback_ = error_callback;
     }
-    void set_close_callback(const EventCallback& close_callback) {
+    void setCloseCallback(const EventCallback& close_callback) {
         closeCallback_ = close_callback;
     }
 

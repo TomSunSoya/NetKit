@@ -20,7 +20,8 @@ enum class LogLevel {
     INFO,
     ERROR,
     FATAL,
-    WARN
+    WARN,
+    DEBUG
 };
 
 class Logger {
@@ -54,6 +55,7 @@ private:
             case LogLevel::ERROR: return "ERROR";
             case LogLevel::FATAL: return "FATAL";
             case LogLevel::WARN: return "WARN";
+            case LogLevel::DEBUG: return "DEBUG";
             default: return "UNKNOWN";
         }
     }
@@ -82,12 +84,13 @@ std::mutex Logger::mutex_;
 #define LOG_ERROR Logger(LogLevel::ERROR)
 #define LOG_FATAL Logger(LogLevel::FATAL)
 #define LOG_WARN Logger(LogLevel::WARN)
+#define LOG_DEBUG Logger(LogLevel::DEBUG)
 
 thread_local char t_errnobuf[512];
 
 const char* strerror_tl(int savedErrno)
 {
-    return strerror_r(savedErrno, t_errnobuf, sizeof t_errnobuf);
+    return reinterpret_cast<const char *>(strerror_r(savedErrno, t_errnobuf, sizeof t_errnobuf));
 }
 
 

@@ -49,7 +49,7 @@ public:
     TimerId addTimer(const TimerCallback& cb, Timestamp when, double interval);
     void addTimerInLoop(std::unique_ptr<Timer> timer);
 
-    // void cancel(TimerId timer_id);
+     void cancel(TimerId timer_id);
 
 private:
     using Entry = std::pair<Timestamp, std::unique_ptr<Timer>>;
@@ -63,6 +63,7 @@ private:
     // move out all expired timers
     std::vector<Entry> getExpired(Timestamp now);
     void reset(const std::vector<Entry>& expired, Timestamp now);
+    void cancelInLoop(TimerId timerId);
 
     bool insert(Timer* timer);
 

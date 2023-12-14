@@ -39,6 +39,16 @@ public:
     void setTcpNoDelay(bool on);
     void setKeepAlive(bool on);
 
+    EventLoop *getLoop() const;
+
+    const InetAddress &localAddress() const;
+
+    const InetAddress &peerAddress() const;
+
+    bool connected() const {
+        return state_ == kConnected;
+    }
+
 private:
     enum StateE {
         kConnecting,

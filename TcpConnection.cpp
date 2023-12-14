@@ -9,7 +9,21 @@
 
 #include <cerrno>
 #include <cassert>
+#include <utility>
 #include <unistd.h>
+
+void defaultConnectionCallback(const TcpConnectionPtr &conn) {
+    LOG_TRACE << conn->localAddress().toIpPort() << " -> "
+              << conn->peerAddress().toIpPort() << " is "
+              << (conn->connected() ? "UP" : "DOWN");
+    // do not call conn->forceClose(), because some users want to register message callback only.
+}
+
+void defaultMessageCallback(const TcpConnectionPtr &,
+                            Buffer *buf,
+                            Timestamp) {
+    buf->retrieveAll();
+}
 
 void TcpConnection::handleRead(Timestamp receiveTime) {
     int saveErrno = 0;
@@ -153,7 +167,20 @@ void TcpConnection::setHighWaterMarkCallback(const HighWaterMarkCallback &highWa
 }
 
 TcpConnection::TcpConnection(EventLoop *pLoop, std::string basicString, int i, InetAddress address,
-                             const InetAddress address1) : loop_(pLoop), name_(basicString), socket_(new Socket(i)),
+                             const InetAddress address1) : loop_(pLoop), name_(std::move(basicString)),
+                                                           socket_(new Socket(i)),
                                                            localAddr(address), peerAddr(address1) {
 
+}
+
+EventLoop *TcpConnection::getLoop() const {
+    return loop_;
+}
+
+const InetAddress &TcpConnection::localAddress() const {
+    return localAddr;
+}
+
+const InetAddress &TcpConnection::peerAddress() const {
+    return peerAddr;
 }

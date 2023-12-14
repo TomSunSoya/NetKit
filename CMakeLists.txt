@@ -51,11 +51,17 @@ add_executable(NetKit
         test/test5.cpp
         TcpServer.cpp
         TcpServer.h
+        EventLoopThreadPool.cpp
+        EventLoopThreadPool.h
         TcpConnection.cpp
         TcpConnection.h
         test/test6.cpp
         Buffer.cpp
-        Buffer.h)
+        Buffer.h
+        Connector.cpp
+        Connector.h
+        TcpClient.cpp
+        TcpClient.h)
 # target_link_libraries(NetKit PRIVATE /usr/lib)
 # target_link_libraries(NetKit PRIVATE /opt/homebrew/Cellar/boost/1.83.0/lib)
 # endif()

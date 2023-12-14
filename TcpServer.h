@@ -13,13 +13,22 @@
 #include <unordered_map>
 
 class EventLoop;
+class EventLoopThreadPool;
 
 class TcpServer {
 public:
     TcpServer(EventLoop* loop, const InetAddress& listenAddr, std::string name = "");
 
-
     ~TcpServer();
+
+    /**
+     * Set the number of threads for handling input
+     *
+     * Always accepts new connection in loop's thread
+     * Must be called before @c start
+     * @param numThreads
+     */
+     void setThreadNum(int numThreads);
 
     void start();
 
@@ -38,11 +47,13 @@ private:
     // no thread safe, but in loop
     void newConnection(int sockfd, const InetAddress& peerAddr);
     void removeConnection(const TcpConnectionPtr& conn);
+    void removeConnectionInLoop(const TcpConnectionPtr& conn);
     using ConnectionMap = std::unordered_map<std::string, TcpConnectionPtr>;
 
     EventLoop* loop_{};
     const std::string name_;
     std::unique_ptr<Acceptor> acceptor_;
+    std::unique_ptr<EventLoopThreadPool> threadPool_;
     ConnectionCallback connectionCallback_;
     MessageCallback messageCallback_;
     WriteCompleteCallback writeCompleteCallback_;
