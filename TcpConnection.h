@@ -6,8 +6,8 @@
 #define NETKIT_TCPCONNECTION_H
 
 #include <boost/noncopyable.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <atomic>
+#include <memory>
 
 #include "Socket.h"
 #include "Channel.h"
@@ -19,6 +19,8 @@ class EventLoop;
 
 class TcpConnection : public boost::noncopyable, public std::enable_shared_from_this<TcpConnection> {
 public:
+    TcpConnection(EventLoop *pLoop, std::string basicString, int i, InetAddress address, const InetAddress address1);
+
     const std::string &getName() const;
 
     void setCloseCallback(const CloseCallback &closeCallback);
@@ -28,11 +30,14 @@ public:
     // called when TcpServer has removed me from its map
     void connectDestroyed();        // should be called only once
     void setConnectionCallback(const ConnectionCallback &connectionCallback);
-
     void setMessageCallback(const MessageCallback &messageCallback);
+    void setWriteCompleteCallback(const WriteCompleteCallback &writeCompleteCallback);
+    void setHighWaterMarkCallback(const HighWaterMarkCallback &highWaterMarkCallback, size_t high);
 
     void send(const std::string& message);
     void shutdown();
+    void setTcpNoDelay(bool on);
+    void setKeepAlive(bool on);
 
 private:
     enum StateE {
@@ -62,6 +67,9 @@ private:
     ConnectionCallback connectionCallback_;
     MessageCallback  messageCallback_;
     CloseCallback closeCallback_;
+    WriteCompleteCallback writeCompleteCallback_;
+    HighWaterMarkCallback highWaterMarkCallback_;
+    size_t highWaterMark_{};
     Buffer inputBuffer_;
     Buffer outputBuffer_;
 };

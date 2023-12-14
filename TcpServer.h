@@ -31,6 +31,9 @@ public:
         messageCallback_ = cb;
     }
 
+    void setWriteCompleteCallback(const WriteCompleteCallback &writeCompleteCallback);
+
+
 private:
     // no thread safe, but in loop
     void newConnection(int sockfd, const InetAddress& peerAddr);
@@ -42,6 +45,7 @@ private:
     std::unique_ptr<Acceptor> acceptor_;
     ConnectionCallback connectionCallback_;
     MessageCallback messageCallback_;
+    WriteCompleteCallback writeCompleteCallback_;
     bool started_{};
     int nextConnId_{};
     ConnectionMap connections_;

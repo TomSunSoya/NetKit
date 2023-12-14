@@ -41,6 +41,9 @@ public:
 
     // set IPv6 ScopeID
     void setScopeId(uint32_t scope_id);
+
+    basic_ostream <_Ch, _Tr> &toHostPort();
+
 private:
     union {
         struct sockaddr_in addr_;

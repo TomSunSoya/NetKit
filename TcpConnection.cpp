@@ -98,6 +98,8 @@ void TcpConnection::sendInLoop(const std::string &message) {
         if (nwrote >= 0) {
             if (static_cast<size_t>(nwrote) < message.size())
                 LOG_TRACE << "I am going to write more data.";
+            else if (writeCompleteCallback_)
+                loop_->queueInLoop([this] { writeCompleteCallback_(shared_from_this()); });
         } else {
             nwrote = 0;
             if (errno == EWOULDBLOCK)
@@ -121,6 +123,8 @@ void TcpConnection::handleWrite() {
             outputBuffer_.retrieve(n);
             if (outputBuffer_.readableBytes() == 0) {
                 channel_->disableWriting();
+                if (writeCompleteCallback_)
+                    loop_->queueInLoop([this] { writeCompleteCallback_(shared_from_this()); });
                 if (state_ == kDisconnecting)
                     shutdownInLoop();
             } else
@@ -129,4 +133,27 @@ void TcpConnection::handleWrite() {
             LOG_ERROR << "TcpConnection::handleWrite";
     } else
         LOG_TRACE << "Connection is down, no more writing";
+}
+
+void TcpConnection::setTcpNoDelay(bool on) {
+    socket_->setTcpNoDelay(on);
+}
+
+void TcpConnection::setKeepAlive(bool on) {
+    socket_->setKeepAlive(on);
+}
+
+void TcpConnection::setWriteCompleteCallback(const WriteCompleteCallback &writeCompleteCallback) {
+    writeCompleteCallback_ = writeCompleteCallback;
+}
+
+void TcpConnection::setHighWaterMarkCallback(const HighWaterMarkCallback &highWaterMarkCallback, size_t high) {
+    highWaterMarkCallback_ = highWaterMarkCallback;
+    highWaterMark_ = high;
+}
+
+TcpConnection::TcpConnection(EventLoop *pLoop, std::string basicString, int i, InetAddress address,
+                             const InetAddress address1) : loop_(pLoop), name_(basicString), socket_(new Socket(i)),
+                                                           localAddr(address), peerAddr(address1) {
+
 }

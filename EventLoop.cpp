@@ -11,13 +11,23 @@ const int EventLoop::kPollTimeMs = 5 * 1000;
 
 thread_local EventLoop* t_loopInThisThread = nullptr;
 
+class IgnoreSigPipe {
+public:
+    IgnoreSigPipe() {
+        ::signal(SIGPIPE, SIG_IGN);
+    }
+};
+
+// 程序开始时即忽略 SIGPIPE
+IgnoreSigPipe initObj;
+
 EventLoop::EventLoop() : looping_(false), threadId_(std::this_thread::get_id()), poller_(new Poller(this))
 {
-    std::clog << "EventLoop created " << this << " in thread " << threadId_ << std::endl;
+    LOG_INFO << "EventLoop created " << this << " in thread " << threadId_;
 
     if (t_loopInThisThread)
     {
-        std::cerr << "ERROR: Another EventLoop " << t_loopInThisThread << " exists in this thread " << threadId_ << std::endl;
+        LOG_ERROR << "Another EventLoop " << t_loopInThisThread << " exists in this thread " << threadId_;
         // std::cerr << "Another EventLoop " << t_loopInThisThread <<  exists in this thread {}.\n", t_loopInThisThread, threadId_);
         pthread_exit(nullptr);
     }
@@ -53,7 +63,7 @@ void EventLoop::loop(Timestamp time)
         doPendingFunctors();
     }
 
-    std::clog << "EventLoop " << this << " stop looping\n";
+    LOG_INFO << "EventLoop " << this << " stop looping";
     looping_ = false;
 }
 
@@ -61,7 +71,7 @@ void EventLoop::abortNotInLoopThread() const
 {
     LOG_ERROR << "EventLoop::abortNotInLoopThread - EventLoop " << this
             << " was created in threadId_ = " << threadId_
-            << ", current thread id = " <<  std::this_thread::get_id() << '\n';
+            << ", current thread id = " <<  std::this_thread::get_id();
 }
 
 void EventLoop::quit()
